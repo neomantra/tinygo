@@ -93,6 +93,26 @@ entry:
   ret void
 }
 
+; Function Attrs: nounwind
+define hidden void @somepkg.someFileLevelFunction1(ptr %context) unnamed_addr #2 {
+entry:
+  ret void
+}
+
+declare void @somepkg.someFileLevelFunction2(ptr) #1
+
+; Function Attrs: nounwind
+define hidden void @somepkg.someAdjacentFunction(ptr %context) unnamed_addr #2 {
+entry:
+  ret void
+}
+
+; Function Attrs: nounwind
+define hidden void @main.sentinelAfterAdjacentLinkname(ptr %context) unnamed_addr #2 {
+entry:
+  ret void
+}
+
 attributes #0 = { allockind("alloc,zeroed") allocsize(0) "alloc-family"="runtime.alloc" "target-features"="+bulk-memory,+bulk-memory-opt,+call-indirect-overlong,+mutable-globals,+nontrapping-fptoint,+sign-ext,-multivalue,-reference-types" }
 attributes #1 = { "target-features"="+bulk-memory,+bulk-memory-opt,+call-indirect-overlong,+mutable-globals,+nontrapping-fptoint,+sign-ext,-multivalue,-reference-types" }
 attributes #2 = { nounwind "target-features"="+bulk-memory,+bulk-memory-opt,+call-indirect-overlong,+mutable-globals,+nontrapping-fptoint,+sign-ext,-multivalue,-reference-types" }
