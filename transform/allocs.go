@@ -141,7 +141,123 @@ func OptimizeAllocs(mod llvm.Module, printAllocs *regexp.Regexp, maxStackAlloc u
 			bitcast.EraseFromParentAsInstruction()
 		}
 		heapalloc.EraseFromParentAsInstruction()
+
+		// Let LLVM stack coloring overlap the frame slots of allocations
+		// that are not live at the same time.
+		addLifetimeMarkers(mod, builder, alloca, store, size)
 	}
+}
+
+// addLifetimeMarkers emits llvm.lifetime.start and end around the uses of a
+// promoted allocation when every use stays in the allocating basic block.
+// See https://llvm.org/docs/LangRef.html#llvm-lifetime-start-intrinsic.
+func addLifetimeMarkers(mod llvm.Module, builder llvm.Builder, alloca, firstUse llvm.Value, size uint64) {
+	block := firstUse.InstructionParent()
+
+	// Collect the instructions that see the pointer or a derived pointer.
+	// The users set is only for last use placement. It must not stop the
+	// walk, because each parameter of one call needs its own analysis.
+	users := map[llvm.Value]struct{}{}
+	visited := map[llvm.Value]struct{}{alloca: {}}
+	worklist := []llvm.Value{alloca}
+	push := func(derived llvm.Value) {
+		if _, ok := visited[derived]; !ok {
+			visited[derived] = struct{}{}
+			worklist = append(worklist, derived)
+		}
+	}
+	for len(worklist) != 0 {
+		value := worklist[len(worklist)-1]
+		worklist = worklist[:len(worklist)-1]
+		for _, use := range getUses(value) {
+			if use.InstructionParent() != block {
+				// Do not compute a lifetime across blocks.
+				return
+			}
+			users[use] = struct{}{}
+			switch use.InstructionOpcode() {
+			case llvm.GetElementPtr, llvm.BitCast:
+				// These derive a new pointer to the allocation.
+				push(use)
+			case llvm.Load, llvm.ICmp:
+				// These cannot propagate the pointer.
+			case llvm.Store:
+				if use.Operand(0) == value {
+					// A stored pointer escapes and blocks promotion, so this
+					// is unreachable. Be conservative anyway.
+					return
+				}
+			case llvm.Call:
+				// The callee cannot capture the pointer but can return it.
+				// Follow a pointer result. Give up on an aggregate result.
+				if callMayReturnValue(use, value) {
+					if use.Type().TypeKind() == llvm.PointerTypeKind {
+						push(use)
+					} else {
+						return
+					}
+				}
+			default:
+				// Do not compute a lifetime for an unknown use.
+				return
+			}
+		}
+	}
+
+	// Find the last use in the block.
+	last := block.LastInstruction()
+	for !last.IsNil() {
+		if _, ok := users[last]; ok {
+			break
+		}
+		last = llvm.PrevInstruction(last)
+	}
+	if last.IsNil() {
+		return // unreachable because the zeroing store is always a use
+	}
+	after := llvm.NextInstruction(last)
+	if after.IsNil() {
+		// The last use is the terminator. There is no place to end the
+		// lifetime.
+		return
+	}
+
+	sizeValue := llvm.ConstInt(mod.Context().Int64Type(), size, false)
+	builder.SetInsertPointBefore(firstUse)
+	llvmutil.EmitLifetimeStart(builder, mod, alloca, sizeValue)
+	builder.SetInsertPointBefore(after)
+	llvmutil.EmitLifetimeEnd(builder, mod, alloca, sizeValue)
+}
+
+// callMayReturnValue reports whether the call can return value, directly or
+// inside an aggregate. It mirrors the returned tracking of the escape
+// analysis in callValueEscapesAt, which the call site has already passed.
+func callMayReturnValue(call, value llvm.Value) bool {
+	called := call.CalledValue()
+	if called.IsAFunction().IsNil() {
+		// Unknown callee. Be conservative.
+		return true
+	}
+	kindReturned := llvm.AttributeKindID("returned")
+	for i := 0; i < called.ParamsCount(); i++ {
+		if call.Operand(i) != value {
+			continue
+		}
+		if !called.GetEnumAttributeAtIndex(i+1, kindReturned).IsNil() {
+			return true
+		}
+		if called.IsDeclaration() {
+			// The escape analysis accepted this call site, so the parameter
+			// is nocapture and not variadic. Without the returned attribute
+			// the result of the declaration cannot alias the argument.
+			continue
+		}
+		result := valueEscapesAtImpl(called.Param(i), true, nil)
+		if !result.escapeAt.IsNil() || result.returned {
+			return true
+		}
+	}
+	return false
 }
 
 // FormatAllocReason renders the heap allocation in a human-readable format.
