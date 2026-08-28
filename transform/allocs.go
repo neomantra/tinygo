@@ -141,7 +141,157 @@ func OptimizeAllocs(mod llvm.Module, printAllocs *regexp.Regexp, maxStackAlloc u
 			bitcast.EraseFromParentAsInstruction()
 		}
 		heapalloc.EraseFromParentAsInstruction()
+
+		// Bound the lifetime of the new alloca where possible, so that
+		// LLVM's stack coloring pass can overlap the frame slots of
+		// allocations that are never live at the same time. Without
+		// lifetime markers, every promoted allocation keeps its own
+		// permanent slot and frame sizes grow with the number of
+		// promotion sites instead of with peak liveness.
+		addLifetimeMarkers(mod, builder, alloca, store, size)
 	}
+}
+
+// addLifetimeMarkers emits llvm.lifetime.start/end intrinsics around the uses
+// of a stack-promoted allocation. It is deliberately conservative: markers are
+// only emitted when every use of the pointer provably happens in the basic
+// block that allocated the value, so the lifetime is the range from the
+// zeroing store to the last use in that block. Aliases of the pointer are
+// followed through GEPs, bitcasts, and pointer-typed call results that may
+// return their argument. Anything the walk cannot cheaply follow — uses in
+// other blocks, the pointer flowing into aggregates (including aggregate
+// call results that may carry it, like a returned slice), unknown
+// instructions — leaves the allocation unmarked, which is no worse than
+// before.
+func addLifetimeMarkers(mod llvm.Module, builder llvm.Builder, alloca, firstUse llvm.Value, size uint64) {
+	block := firstUse.InstructionParent()
+
+	// Collect every instruction that can see the pointer, following derived
+	// pointers (GEPs, bitcasts, and calls that might return their argument).
+	// The users set only records instructions for last-use placement; it must
+	// not stop re-analysis, because behavior is value-specific: a single call
+	// can receive both the original pointer and a derived alias, and only one
+	// of them may be the returned parameter. The visited set instead bounds
+	// the traversal, per derived value.
+	users := map[llvm.Value]struct{}{}
+	visited := map[llvm.Value]struct{}{alloca: {}}
+	worklist := []llvm.Value{alloca}
+	push := func(derived llvm.Value) {
+		if _, ok := visited[derived]; !ok {
+			visited[derived] = struct{}{}
+			worklist = append(worklist, derived)
+		}
+	}
+	for len(worklist) != 0 {
+		value := worklist[len(worklist)-1]
+		worklist = worklist[:len(worklist)-1]
+		for _, use := range getUses(value) {
+			if use.InstructionParent() != block {
+				// Used outside the allocating block; don't try to compute a
+				// lifetime for it.
+				return
+			}
+			users[use] = struct{}{}
+			switch use.InstructionOpcode() {
+			case llvm.GetElementPtr, llvm.BitCast:
+				// These derive a new pointer to the allocation.
+				push(use)
+			case llvm.Load, llvm.ICmp:
+				// These cannot propagate the pointer.
+			case llvm.Store:
+				if use.Operand(0) == value {
+					// Should be unreachable: storing the pointer means it
+					// escaped and the allocation would not have been
+					// promoted. Be conservative anyway.
+					return
+				}
+			case llvm.Call:
+				// The escape analysis (valueEscapesAt) has already proven the
+				// callee does not capture the pointer. It may still *return*
+				// it, directly or inside an aggregate such as a slice, which
+				// the escape analysis tracks interprocedurally for defined
+				// functions. When the result cannot alias the argument, the
+				// call is a plain use; a pointer-typed aliasing result is
+				// followed as a derived pointer; an aggregate that may carry
+				// the pointer is more than this conservative analysis wants
+				// to follow, so it leaves the allocation unmarked.
+				if callMayReturnValue(use, value) {
+					if use.Type().TypeKind() == llvm.PointerTypeKind {
+						push(use)
+					} else {
+						return
+					}
+				}
+			default:
+				// Unknown use (insertvalue, phi, ...): don't try to compute a
+				// lifetime.
+				return
+			}
+		}
+	}
+
+	// Find the last use in the block.
+	last := block.LastInstruction()
+	for !last.IsNil() {
+		if _, ok := users[last]; ok {
+			break
+		}
+		last = llvm.PrevInstruction(last)
+	}
+	if last.IsNil() {
+		return // shouldn't happen: the zeroing store is always a use
+	}
+	after := llvm.NextInstruction(last)
+	if after.IsNil() {
+		// The last use is the block terminator; there is no place to end the
+		// lifetime.
+		return
+	}
+
+	sizeValue := llvm.ConstInt(mod.Context().Int64Type(), size, false)
+	builder.SetInsertPointBefore(firstUse)
+	llvmutil.EmitLifetimeStart(builder, mod, alloca, sizeValue)
+	builder.SetInsertPointBefore(after)
+	llvmutil.EmitLifetimeEnd(builder, mod, alloca, sizeValue)
+}
+
+// callMayReturnValue reports whether this call might return value (one of
+// its arguments), directly or inside an aggregate such as a slice. It
+// mirrors the 'returned' tracking of callValueEscapesAt: a declared external
+// function only returns an argument when the parameter carries the
+// 'returned' attribute, while a defined function's body is walked
+// interprocedurally.
+//
+// The declaration rule is only valid because the call site has already
+// passed the escape analysis, which requires the matching declaration
+// parameters to be nocapture/captures(none) — under that contract a
+// declaration cannot return the argument except through 'returned'. The
+// absence of 'returned' alone is not a general guarantee.
+func callMayReturnValue(call, value llvm.Value) bool {
+	called := call.CalledValue()
+	if called.IsAFunction().IsNil() {
+		// Unknown callee; be conservative.
+		return true
+	}
+	kindReturned := llvm.AttributeKindID("returned")
+	for i := 0; i < called.ParamsCount(); i++ {
+		if call.Operand(i) != value {
+			continue
+		}
+		if !called.GetEnumAttributeAtIndex(i+1, kindReturned).IsNil() {
+			return true
+		}
+		if called.IsDeclaration() {
+			// Attributes are the whole contract for declarations: nocapture
+			// without 'returned' means the result cannot alias the argument.
+			continue
+		}
+		result := valueEscapesAtImpl(called.Param(i), true, nil)
+		if !result.escapeAt.IsNil() || result.returned {
+			return true
+		}
+	}
+	return false
 }
 
 // FormatAllocReason renders the heap allocation in a human-readable format.

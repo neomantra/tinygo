@@ -85,6 +85,74 @@ define void @testZeroSizedAlloc() {
   ret void
 }
 
+; Two sequential allocations with disjoint lifetimes in one block: the
+; promoted allocas get lifetime markers so their stack slots can overlap.
+define void @testSequentialLifetimes() {
+  %alloc1 = call align 4 ptr @runtime.alloc(i32 12, ptr null)
+  %v1 = call ptr @noescapeIntPtr(ptr %alloc1)
+  %alloc2 = call align 4 ptr @runtime.alloc(i32 12, ptr null)
+  %v2 = call ptr @noescapeIntPtr(ptr %alloc2)
+  ret void
+}
+
+; The allocation is used in another block, so the conservative lifetime
+; analysis does not emit markers for it.
+define void @testCrossBlockUse(i1 %c) {
+entry:
+  %alloc = call align 4 ptr @runtime.alloc(i32 4, ptr null)
+  store i32 5, ptr %alloc
+  br i1 %c, label %then, label %done
+then:
+  %v = call ptr @noescapeIntPtr(ptr %alloc)
+  br label %done
+done:
+  ret void
+}
+
+; A defined function may return its pointer argument; the returned alias's
+; uses extend the allocation's lifetime.
+define ptr @returnsArg(ptr %p) {
+  ret ptr %p
+}
+
+define void @testReturnedPointer() {
+  %alloc = call align 4 ptr @runtime.alloc(i32 8, ptr null)
+  %alias = call ptr @returnsArg(ptr %alloc)
+  store i32 7, ptr %alias
+  ret void
+}
+
+; A defined function may also return its pointer argument inside an
+; aggregate (like a slice). The lifetime analysis cannot cheaply follow
+; that, so it must not emit markers at all.
+define { ptr, i32 } @returnsArgInAggregate(ptr %p) {
+  %agg = insertvalue { ptr, i32 } undef, ptr %p, 0
+  %agg2 = insertvalue { ptr, i32 } %agg, i32 3, 1
+  ret { ptr, i32 } %agg2
+}
+
+define void @testReturnedAggregate() {
+  %alloc = call align 4 ptr @runtime.alloc(i32 8, ptr null)
+  %agg = call { ptr, i32 } @returnsArgInAggregate(ptr %alloc)
+  %ptr = extractvalue { ptr, i32 } %agg, 0
+  store i32 7, ptr %ptr
+  ret void
+}
+
+; The same call can receive both the original pointer and a derived alias;
+; returnability must be checked per source value, not once per call.
+define ptr @returnsSecondArg(ptr %unused, ptr %p) {
+  ret ptr %p
+}
+
+define void @testReturnedDerivedArgument() {
+  %alloc = call align 4 ptr @runtime.alloc(i32 8, ptr null)
+  %derived = getelementptr i8, ptr %alloc, i32 0
+  %alias = call ptr @returnsSecondArg(ptr %alloc, ptr %derived)
+  store i32 9, ptr %alias
+  ret void
+}
+
 declare ptr @escapeIntPtr(ptr)
 
 declare ptr @noescapeIntPtr(ptr nocapture)
