@@ -551,12 +551,8 @@ var darwinVariadicImports = map[string]string{
 	"openat": "syscall_libc_openat",
 }
 
-// Lower a load from a Darwin libc trampoline address global. Packages such as
-// golang.org/x/sys/unix declare globals named libc_*_trampoline_addr and use
-// assembly to initialize them to trampolines for symbols imported with
-// //go:cgo_import_dynamic. TinyGo cannot compile that assembly, so use the
-// imported dylib symbol directly, just like createDarwinFuncPCABI0Call does for
-// the standard library's function-based trampoline pattern.
+// Replace assembly trampoline addresses with imported function addresses.
+// See https://go.googlesource.com/sys/+/refs/heads/master/unix/mksyscall.go.
 func (b *builder) createDarwinCgoImportDynamicLoad(unop *ssa.UnOp) llvm.Value {
 	if b.GOOS != "darwin" {
 		return llvm.Value{}
@@ -570,9 +566,6 @@ func (b *builder) createDarwinCgoImportDynamicLoad(unop *ssa.UnOp) llvm.Value {
 	if !strings.HasPrefix(global.Name(), "libc_") || !strings.HasSuffix(global.Name(), suffix) {
 		return llvm.Value{}
 	}
-	// The replacement value is a ptrtoint to uintptr, so only replace loads of
-	// uintptr-typed globals; the trampoline address pattern always uses plain
-	// uintptr variables. Anything else keeps its normal load.
 	if basic, ok := global.Type().(*types.Pointer).Elem().Underlying().(*types.Basic); !ok || basic.Kind() != types.Uintptr {
 		return llvm.Value{}
 	}
@@ -593,15 +586,14 @@ func (b *builder) createDarwinCgoImportDynamicLoad(unop *ssa.UnOp) llvm.Value {
 }
 
 func (b *builder) createDarwinImportedFunctionAddr(name string, pos token.Pos) llvm.Value {
+	if _, isGlobal := b.globalNames[name]; isGlobal || !b.mod.NamedGlobal(name).IsNil() {
+		b.addError(pos, "cgo_import_dynamic remote symbol "+name+" is already a global variable")
+		return llvm.Value{}
+	}
 	// The signature does not matter. The declaration is only used for its
 	// address, which goes to the syscall implementation as a uintptr.
 	llvmFn := b.mod.NamedFunction(name)
 	if llvmFn.IsNil() {
-		if !b.mod.NamedGlobal(name).IsNil() {
-			// AddFunction would silently rename the new declaration.
-			b.addError(pos, "cgo_import_dynamic remote symbol "+name+" is already a global variable")
-			return llvm.Value{}
-		}
 		llvmFnType := llvm.FunctionType(b.ctx.VoidType(), nil, false)
 		llvmFn = llvm.AddFunction(b.mod, name, llvmFnType)
 	}

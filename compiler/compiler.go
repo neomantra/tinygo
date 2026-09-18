@@ -96,6 +96,7 @@ type compilerContext struct {
 	functionABIs     map[functionABIKey]functionABI
 	astComments      map[string]*ast.CommentGroup
 	cgoImportDynamic map[string]string // //go:cgo_import_dynamic local name -> remote symbol
+	globalNames      map[string]struct{}
 	embedGlobals     map[string][]*loader.EmbedFile
 	pkg              *types.Package
 	loaderPkg        *loader.Package // current package being compiled (for AST access)
@@ -873,6 +874,15 @@ func (c *compilerContext) getDIFile(filename string) llvm.Metadata {
 // createPackage builds the LLVM IR for all types, methods, and global variables
 // in the given package.
 func (c *compilerContext) createPackage(irbuilder llvm.Builder, pkg *ssa.Package) {
+	if c.GOOS == "darwin" {
+		c.globalNames = make(map[string]struct{})
+		for _, member := range pkg.Members {
+			if global, ok := member.(*ssa.Global); ok {
+				c.globalNames[c.getGlobalInfo(global).linkName] = struct{}{}
+			}
+		}
+	}
+
 	// Sort by position, so that the order of the functions in the IR matches
 	// the order of functions in the source file. This is useful for testing,
 	// for example.

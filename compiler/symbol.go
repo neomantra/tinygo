@@ -767,15 +767,9 @@ func (c *compilerContext) fileForFunc(f *ssa.Function) *ast.File {
 	return nil
 }
 
-// loadASTComments loads comments from the AST that cannot be read on demand
-// while compiling a function, for use later in the program. This covers doc
-// comments on globals (required for //go:extern pragmas) and free-standing
-// file-level //go:cgo_import_dynamic directives, which are not attached to any
-// declaration and apply to the whole package.
+// loadASTComments collects global variable comments and package import directives.
 func (c *compilerContext) loadASTComments(pkg *loader.Package) {
 	for _, file := range pkg.Files {
-		// Collect //go:cgo_import_dynamic local [remote ["library"]] directives.
-		// The remote symbol defaults to local. The library operand is ignored.
 		for _, group := range file.Comments {
 			for _, comment := range group.List {
 				if !strings.HasPrefix(comment.Text, "//go:cgo_import_dynamic") {

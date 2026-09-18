@@ -7,9 +7,8 @@
 // sys/ioctl.h is not in lib/macos-minimal-sdk. Declare ioctl here.
 extern int ioctl(int fd, unsigned long request, ...);
 
-// Fixed-signature wrappers for the variadic libc imports. Variadic functions
-// take stack arguments on darwin/arm64. See darwinVariadicImports in
-// compiler/syscall.go.
+// Darwin arm64 passes variadic arguments on the stack.
+// See https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms.
 
 int syscall_libc_open(uintptr_t pathname, uintptr_t flags, uintptr_t mode) {
     return open((const char *)pathname, (int)flags, (mode_t)mode);
