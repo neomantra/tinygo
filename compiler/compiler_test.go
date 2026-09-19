@@ -202,13 +202,16 @@ func TestAggregateFunctionABI(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			checkFunctionParamABI(t, mod, "main.readDirectAggregates", false, false)
-			checkFunctionParamABI(t, mod, "main.readLimitAggregates", false, false)
-			checkFunctionParamABI(t, mod, "main.readBoundaryAggregates", true, false)
-			checkFunctionParamABI(t, mod, "main.readAggregates", true, false)
-			checkFunctionParamABI(t, mod, "main.readSingleAggregate", false)
-			checkFunctionParamABI(t, mod, "main.readThreeAggregates", true, false, false)
-			checkFunctionParamABI(t, mod, "main.readResultBudget", false, true)
+			// Every test aggregate is above the wasm limit, so the wasm target
+			// passes them all indirectly. The other target covers the budget logic.
+			wasm := target == "wasm"
+			checkFunctionParamABI(t, mod, "main.readDirectAggregates", wasm, wasm)
+			checkFunctionParamABI(t, mod, "main.readLimitAggregates", wasm, wasm)
+			checkFunctionParamABI(t, mod, "main.readBoundaryAggregates", true, wasm)
+			checkFunctionParamABI(t, mod, "main.readAggregates", true, wasm)
+			checkFunctionParamABI(t, mod, "main.readSingleAggregate", wasm)
+			checkFunctionParamABI(t, mod, "main.readThreeAggregates", true, wasm, wasm)
+			checkFunctionParamABI(t, mod, "main.readResultBudget", wasm, true)
 			checkFunctionParamABI(t, mod, "readAggregateExport", false)
 			if target == "wasm" {
 				if err := ValidateWasmFunctionParameters(mod); err != nil {
@@ -624,7 +627,7 @@ func TestAggregateValueCount(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			count, exceeded := aggregateValueCountLimit(test.typ, 0, maxDirectAggregateValues)
+			count, exceeded := aggregateValueCountLimit(test.typ, 0, maxDirectAggregateValuesDefault)
 			if exceeded != test.exceeded {
 				t.Errorf("expected exceeded=%t, got %t", test.exceeded, exceeded)
 			}

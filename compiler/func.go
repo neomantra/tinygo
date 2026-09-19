@@ -14,7 +14,19 @@ import (
 
 // LLVM recursively expands each struct field and array element into separate
 // values. Pass larger aggregates indirectly before LLVM expands them.
-const maxDirectAggregateValues = 1024
+// On wasm a direct aggregate spills into each frame it flows through.
+// See #5526 for the SelectionDAG limit and #5615 for the wasm frame cost.
+const (
+	maxDirectAggregateValuesDefault = 1024
+	maxDirectAggregateValuesWasm    = 64
+)
+
+func (c *compilerContext) maxDirectAggregateValues() uint64 {
+	if c.GOARCH == "wasm" {
+		return maxDirectAggregateValuesWasm
+	}
+	return maxDirectAggregateValuesDefault
+}
 
 // The WebAssembly JavaScript API limits function types to 1000 parameters.
 // Apply the same internal ABI cap on every target.
@@ -182,7 +194,7 @@ func (c *compilerContext) hasIndirectResult(sig *types.Signature) (llvm.Type, bo
 }
 
 func (c *compilerContext) isIndirectAggregate(typ llvm.Type) bool {
-	return aggregateValueCountExceeds(typ, maxDirectAggregateValues)
+	return aggregateValueCountExceeds(typ, c.maxDirectAggregateValues())
 }
 
 func aggregateValueCountExceeds(typ llvm.Type, limit uint64) bool {
