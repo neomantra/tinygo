@@ -51,6 +51,7 @@ var (
 	finalizerQueued        bool
 	finalizerDraining      bool
 	finalizerRunnerStarted bool
+	finalizerFutex         task.Futex
 )
 
 func initHeap() {
@@ -364,15 +365,8 @@ func finalizerPressureGC() bool {
 
 func wakeFinalizer() {
 	if hasScheduler || hasParallelism {
-		gcLock.Lock()
-		spawn := !finalizerRunnerStarted
-		if spawn {
-			finalizerRunnerStarted = true
-		}
-		gcLock.Unlock()
-		if spawn {
-			spawnFinalizerRunner()
-		}
+		finalizerFutex.Add(1)
+		finalizerFutex.Wake()
 	} else {
 		drainFinalizers()
 	}
@@ -400,14 +394,9 @@ func drainFinalizers() {
 
 func finalizerRunner() {
 	for {
+		val := finalizerFutex.Load()
 		drainFinalizers()
-		gcLock.Lock()
-		if finalizerPending == nil {
-			finalizerRunnerStarted = false
-			gcLock.Unlock()
-			return
-		}
-		gcLock.Unlock()
+		finalizerFutex.Wait(val)
 	}
 }
 
