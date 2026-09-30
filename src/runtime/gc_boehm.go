@@ -35,16 +35,16 @@ const (
 
 var gcLock task.PMutex
 
+// boehmFinalizer is the client data that bdwgc keeps for one registration.
+// bdwgc traces it, so it stays alive without a list on the Go side.
 type boehmFinalizer struct {
 	next   *boehmFinalizer
-	obj    uintptr // allocation base, complemented so the registration does not keep the object alive
 	offset uintptr // distance from the base to the pointer given to SetFinalizer
 	fn     interface{}
 	ptr    unsafe.Pointer // keeps the object alive after Boehm dequeues its callback
 }
 
 var (
-	finalizers             *boehmFinalizer
 	finalizerPending       *boehmFinalizer
 	numFinalizers          uintptr
 	finalizersSinceGC      uintptr
@@ -266,40 +266,21 @@ func SetFinalizer(obj interface{}, finalizer interface{}) {
 		gcLock.Unlock()
 		return
 	}
-	offset := uintptr(objPtr) - base
-	// Keep the object address hidden from Boehm's conservative scanner.
-	addr := ^base
 	if entry != nil {
-		entry.obj = addr
-		entry.offset = offset
+		entry.offset = uintptr(objPtr) - base
 	}
-	prev := &finalizers
-	for n := *prev; n != nil; n = *prev {
-		if n.obj == addr {
-			if finalizer == nil {
-				libgc_register_finalizer(unsafe.Pointer(base), nil)
-				*prev = n.next
-				n.fn = nil
-				numFinalizers--
-				if finalizersSinceGC != 0 {
-					finalizersSinceGC--
-				}
-			} else {
-				n.fn = finalizer
-				n.offset = offset
-			}
-			gcResumeWorld()
-			gcLock.Unlock()
-			return
-		}
-		prev = &n.next
-	}
-	if entry != nil {
-		libgc_register_finalizer(unsafe.Pointer(base), unsafe.Pointer(entry))
-		entry.next = finalizers
-		finalizers = entry
+	// bdwgc keeps one finalizer per allocation and returns the data of the
+	// one it replaced or removed.
+	old := libgc_register_finalizer(base, uintptr(unsafe.Pointer(entry)))
+	switch {
+	case entry != nil && old == 0:
 		numFinalizers++
 		finalizersSinceGC++
+	case entry == nil && old != 0:
+		numFinalizers--
+		if finalizersSinceGC != 0 {
+			finalizersSinceGC--
+		}
 	}
 	spawn := entry != nil && !finalizerRunnerStarted
 	if spawn {
@@ -315,24 +296,11 @@ func SetFinalizer(obj interface{}, finalizer interface{}) {
 //export tinygo_runtime_bdwgc_finalizer
 func boehmQueueFinalizer(obj unsafe.Pointer, data unsafe.Pointer) {
 	n := (*boehmFinalizer)(data)
-	prev := &finalizers
-	for *prev != nil && *prev != n {
-		prev = &(*prev).next
-	}
-	if *prev == nil {
-		if n.fn != nil {
-			runtimeFatal("gc: Boehm finalizer missing from registrations")
-		}
-		return
-	}
-	*prev = n.next
 	numFinalizers--
-	if n.fn != nil {
-		n.ptr = unsafe.Add(obj, n.offset)
-		n.next = finalizerPending
-		finalizerPending = n
-		finalizerQueued = true
-	}
+	n.ptr = unsafe.Add(obj, n.offset)
+	n.next = finalizerPending
+	finalizerPending = n
+	finalizerQueued = true
 }
 
 // Call with gcLock held. Callbacks only enqueue Go work; they never run user code.
@@ -400,8 +368,11 @@ func finalizerRunner() {
 	}
 }
 
+// The compiler assumes that pointer parameters of exported functions do not
+// escape, so the entry is passed as an integer to keep it on the heap.
+//
 //export tinygo_runtime_bdwgc_register_finalizer
-func libgc_register_finalizer(unsafe.Pointer, unsafe.Pointer)
+func libgc_register_finalizer(obj, data uintptr) uintptr
 
 //export GC_should_invoke_finalizers
 func libgc_should_invoke_finalizers() int32

@@ -16,9 +16,14 @@ static void GC_CALLBACK finalizer_callback(void *obj, void *data) {
     tinygo_runtime_bdwgc_finalizer(obj, data);
 }
 
-void tinygo_runtime_bdwgc_register_finalizer(void *obj, void *data) {
-    GC_register_finalizer_no_order(obj, data ? finalizer_callback : NULL,
-                                   data, NULL, NULL);
+// Set or clear the finalizer of obj and return the data of the old one.
+uintptr_t tinygo_runtime_bdwgc_register_finalizer(uintptr_t obj, uintptr_t data) {
+    GC_finalization_proc old_proc = 0;
+    void *old_data = NULL;
+
+    GC_register_finalizer_no_order((void *)obj, data ? finalizer_callback : NULL,
+                                   (void *)data, &old_proc, &old_data);
+    return (uintptr_t)old_data;
 }
 
 struct descriptor_cache_entry {
