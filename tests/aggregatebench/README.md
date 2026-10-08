@@ -5,6 +5,8 @@ Keep generated compilers and executables in the ignored `artifacts/` directory
 and compiler checkouts in the ignored `worktrees/` directory beside this file.
 Commit workload sources, sweep scripts, manifests, logs, and reports.
 
+Start with the [integrated report](REPORT.md) for findings across all architectures.
+
 The [architecture extension report](results/2026-10-08-architectures/REPORT.md)
 adds Cortex-M and RISC-V execution plus x86-64 code inspection.
 

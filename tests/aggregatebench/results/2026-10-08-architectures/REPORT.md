@@ -1,5 +1,7 @@
 # Aggregate architecture sweep
 
+See the [integrated report](../../REPORT.md) for the combined findings across architectures.
+
 The allocation tradeoff also appears on Cortex-M3 and RV32. Lower thresholds
 reduce code size and stack reservations, but introduce allocations in update
 loops. The lifetime-marker improvement applies independently on Cortex-M3,

@@ -1,5 +1,7 @@
 # Aggregate threshold sweep results
 
+See the [integrated report](../../REPORT.md) for the combined findings across architectures.
+
 The [architecture extension](../2026-10-08-architectures/REPORT.md) adds
 Cortex-M and RV32 execution plus x86-64 code inspection.
 
