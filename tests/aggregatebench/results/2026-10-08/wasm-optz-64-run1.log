@@ -1,0 +1,307 @@
+=== RUN   TestBytes
+=== RUN   TestBytes/16
+=== RUN   TestBytes/32
+=== RUN   TestBytes/64
+=== RUN   TestBytes/65
+=== RUN   TestBytes/128
+=== RUN   TestBytes/256
+=== RUN   TestBytes/512
+=== RUN   TestBytes/1024
+=== RUN   TestBytes/1025
+--- PASS: TestBytes (0.01s)
+    --- PASS: TestBytes/16 (0.00s)
+    --- PASS: TestBytes/32 (0.00s)
+    --- PASS: TestBytes/64 (0.00s)
+    --- PASS: TestBytes/65 (0.00s)
+    --- PASS: TestBytes/128 (0.00s)
+    --- PASS: TestBytes/256 (0.00s)
+    --- PASS: TestBytes/512 (0.00s)
+    --- PASS: TestBytes/1024 (0.00s)
+    --- PASS: TestBytes/1025 (0.01s)
+=== RUN   TestShapes
+--- PASS: TestShapes (0.00s)
+=== RUN   TestSequentialBlocks
+--- PASS: TestSequentialBlocks (0.00s)
+BenchmarkBytes/16/Update 	 9883585	        12.01 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/16/Update
+    checksum 143
+    checksum 24908
+    checksum 2.545904e+06
+    checksum 2.55001024e+08
+    checksum 1.764407792e+09
+    checksum 2.520315047e+09
+BenchmarkBytes/16/Read   	27993364	         4.286 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/16/Read
+    checksum 142
+    checksum 22756
+    checksum 2.29e+06
+    checksum 2.29e+08
+    checksum 4.250227318e+09
+    checksum 6.410480212e+09
+BenchmarkBytes/16/Serial 	 2450941	        46.89 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/16/Serial
+    checksum 780
+    checksum 96056
+    checksum 9.638816e+06
+    checksum 9.63998336e+08
+    checksum 2.362707652e+09
+BenchmarkBytes/16/Live   	 2520688	        42.52 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/16/Live
+    checksum 780
+    checksum 96056
+    checksum 9.638816e+06
+    checksum 9.63998336e+08
+    checksum 2.429941088e+09
+BenchmarkBytes/32/Update 	 5334141	        22.29 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/32/Update
+    checksum 23
+    checksum 24572
+    checksum 2.554576e+06
+    checksum 2.55000384e+08
+    checksum 9.4117746e+08
+    checksum 1.36020821e+09
+BenchmarkBytes/32/Read   	13915320	         8.628 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/32/Read
+    checksum 22
+    checksum 22276
+    checksum 2.29e+06
+    checksum 2.29e+08
+    checksum 2.160441602e+09
+    checksum 3.186607576e+09
+BenchmarkBytes/32/Serial 	 1283856	        87.80 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/32/Serial
+    checksum 300
+    checksum 94136
+    checksum 9.638816e+06
+    checksum 9.63998336e+08
+    checksum 1.237636e+09
+BenchmarkBytes/32/Live   	 1425824	        80.05 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/32/Live
+    checksum 300
+    checksum 94136
+    checksum 9.638816e+06
+    checksum 9.63998336e+08
+    checksum 1.374492736e+09
+BenchmarkBytes/64/Update 	 3078169	        38.87 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/64/Update
+    checksum 39
+    checksum 24164
+    checksum 2.567888e+06
+    checksum 2.54999616e+08
+    checksum 5.02108932e+08
+    checksum 7.84958087e+08
+BenchmarkBytes/64/Read   	 6503456	        18.43 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/64/Read
+    checksum 38
+    checksum 23108
+    checksum 2.369872e+06
+    checksum 2.37e+08
+    checksum 1.108211164e+09
+    checksum 1.541319072e+09
+BenchmarkBytes/64/Serial 	  750236	       160.9 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/64/Serial
+    checksum 364
+    checksum 96440
+    checksum 9.798752e+06
+    checksum 5.5884766e+08
+    checksum 7.35231624e+08
+BenchmarkBytes/64/Live   	  793126	       151.4 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/64/Live
+    checksum 364
+    checksum 96440
+    checksum 9.798752e+06
+    checksum 5.77176152e+08
+    checksum 7.7726182e+08
+BenchmarkBytes/65/Update 	 1641999	        70.51 ns/op	      65 B/op	       1 allocs/op
+--- BENCH: BenchmarkBytes/65/Update
+    checksum 39
+    checksum 24080
+    checksum 2.54108e+06
+    checksum 2.55321514e+08
+    checksum 4.19226489e+08
+BenchmarkBytes/65/Read   	59281252	         2.014 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/65/Read
+    checksum 38
+    checksum 23132
+    checksum 2.353604e+06
+    checksum 2.35414753e+08
+    checksum 1.0047432484e+10
+    checksum 1.3955718472e+10
+BenchmarkBytes/65/Serial 	 4420710	        24.95 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/65/Serial
+    checksum 364
+    checksum 96230
+    checksum 9.80771e+06
+    checksum 9.80795902e+08
+    checksum 4.335829834e+09
+BenchmarkBytes/65/Live   	 4617726	        23.54 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/65/Live
+    checksum 364
+    checksum 96230
+    checksum 9.80771e+06
+    checksum 9.80795902e+08
+    checksum 4.52906797e+09
+BenchmarkBytes/128/Update	  932649	       126.8 ns/op	     128 B/op	       1 allocs/op
+--- BENCH: BenchmarkBytes/128/Update
+    checksum 71
+    checksum 25044
+    checksum 2.551248e+06
+    checksum 2.37847603e+08
+BenchmarkBytes/128/Read  	31885648	         4.218 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/128/Read
+    checksum 70
+    checksum 24516
+    checksum 2.489936e+06
+    checksum 2.49e+08
+    checksum 5.801130262e+09
+    checksum 7.939526288e+09
+BenchmarkBytes/128/Serial	 2122576	        54.99 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/128/Serial
+    checksum 492
+    checksum 99896
+    checksum 1.0039392e+07
+    checksum 1.003999872e+09
+    checksum 2.131065568e+09
+BenchmarkBytes/128/Live  	 2282298	        54.49 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/128/Live
+    checksum 492
+    checksum 99896
+    checksum 1.0039392e+07
+    checksum 1.003999872e+09
+    checksum 2.291429236e+09
+BenchmarkBytes/256/Update	  596449	       225.7 ns/op	     256 B/op	       1 allocs/op
+--- BENCH: BenchmarkBytes/256/Update
+    checksum 135
+    checksum 25676
+    checksum 2.55176e+06
+    checksum 1.52097626e+08
+BenchmarkBytes/256/Read  	18945517	         6.083 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/256/Read
+    checksum 134
+    checksum 25284
+    checksum 2.54984e+06
+    checksum 2.54999616e+08
+    checksum 4.831106634e+09
+BenchmarkBytes/256/Serial	 1653678	        69.93 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/256/Serial
+    checksum 748
+    checksum 102200
+    checksum 1.01592e+07
+    checksum 1.015999872e+09
+    checksum 1.68013502e+09
+BenchmarkBytes/256/Live  	 1762993	        68.03 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/256/Live
+    checksum 748
+    checksum 102200
+    checksum 1.01592e+07
+    checksum 1.015999872e+09
+    checksum 1.791198028e+09
+BenchmarkBytes/512/Update	  287311	       421.5 ns/op	     512 B/op	       1 allocs/op
+--- BENCH: BenchmarkBytes/512/Update
+    checksum 7
+    checksum 24908
+    checksum 2.551632e+06
+    checksum 7.3263359e+07
+BenchmarkBytes/512/Read  	13911146	         7.822 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/512/Read
+    checksum 6
+    checksum 24516
+    checksum 2.549584e+06
+    checksum 2.54998848e+08
+    checksum 3.54734223e+09
+BenchmarkBytes/512/Serial	 1325139	        92.34 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/512/Serial
+    checksum 236
+    checksum 100664
+    checksum 1.0158176e+07
+    checksum 1.0159968e+09
+    checksum 1.346339208e+09
+BenchmarkBytes/512/Live  	 1229978	       103.2 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/512/Live
+    checksum 236
+    checksum 100664
+    checksum 1.0158176e+07
+    checksum 1.0159968e+09
+    checksum 1.249657012e+09
+BenchmarkBytes/1024/Update        	  159846	       784.4 ns/op	    1024 B/op	       1 allocs/op
+--- BENCH: BenchmarkBytes/1024/Update
+    checksum 7
+    checksum 24908
+    checksum 2.555728e+06
+    checksum 4.0772804e+07
+BenchmarkBytes/1024/Read          	 9500019	        12.29 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/1024/Read
+    checksum 6
+    checksum 24516
+    checksum 2.549584e+06
+    checksum 2.54998848e+08
+    checksum 2.422504008e+09
+BenchmarkBytes/1024/Serial        	  764556	       167.2 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/1024/Serial
+    checksum 236
+    checksum 100664
+    checksum 1.0158176e+07
+    checksum 7.76788264e+08
+BenchmarkBytes/1024/Live          	  722487	       144.4 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/1024/Live
+    checksum 236
+    checksum 100664
+    checksum 1.0158176e+07
+    checksum 7.34044624e+08
+BenchmarkBytes/1025/Update        	   52171	      2328 ns/op	    3075 B/op	       3 allocs/op
+--- BENCH: BenchmarkBytes/1025/Update
+    checksum 7
+    checksum 24908
+    checksum 2.537688e+06
+    checksum 1.3223157e+07
+BenchmarkBytes/1025/Read          	   80370	      1533 ns/op	    2050 B/op	       2 allocs/op
+--- BENCH: BenchmarkBytes/1025/Read
+    checksum 6
+    checksum 24516
+    checksum 2.546628e+06
+    checksum 2.047484e+07
+BenchmarkBytes/1025/Serial        	   10000	     10184 ns/op	   13325 B/op	      13 allocs/op
+--- BENCH: BenchmarkBytes/1025/Serial
+    checksum 236
+    checksum 100664
+    checksum 1.018435e+07
+BenchmarkBytes/1025/Live          	   10000	     10149 ns/op	   13325 B/op	      13 allocs/op
+--- BENCH: BenchmarkBytes/1025/Live
+    checksum 236
+    checksum 100664
+    checksum 1.018435e+07
+BenchmarkWords64                  	 2364054	        50.76 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkWords64
+    checksum 3.5184372088833e+13
+    checksum 6.803777952685856e+15
+    checksum 6.924108557555293e+17
+    checksum 1.3934208912095345e+19
+    checksum 1.1193495537792029e+19
+    checksum 1.6250826273853745e+19
+BenchmarkScene                    	 5015138	        23.03 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkScene
+    checksum 3
+    checksum 168588
+    checksum 1.66679494656e+11
+    checksum 2.064159403409408e+15
+    checksum 1.069060846518272e+16
+BenchmarkRecord                   	  682611	       171.3 ns/op	     292 B/op	       1 allocs/op
+--- BENCH: BenchmarkRecord
+    checksum 36
+    checksum 187700
+    checksum 1.805810222e+11
+    checksum 1.386214470652361e+15
+BenchmarkRecordInterface          	 4475110	        25.62 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkRecordInterface
+    checksum 36
+    checksum 10852
+    checksum 7.533344e+07
+    checksum 7.50033333312e+11
+    checksum 1.5020106304447e+13
+BenchmarkSequentialBlocks         	  106371	      1128 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkSequentialBlocks
+    checksum 56
+    checksum 84800
+    checksum 1.014656e+07
+    checksum 1.08070104e+08
+PASS

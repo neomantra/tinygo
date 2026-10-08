@@ -1,0 +1,104 @@
+[
+  {
+    "phase": "build",
+    "command": [
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/tinygo-markers",
+      "test",
+      "-c",
+      "-target=wasm",
+      "-stack-size=64kb",
+      "-opt=z",
+      "-bench=BenchmarkBytes/128/Update$",
+      "-run=^$",
+      "-benchmem",
+      "-benchtime=1s",
+      "-o",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-markers.wasm",
+      "./tests/aggregatebench"
+    ]
+  },
+  {
+    "phase": "build",
+    "command": [
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/tinygo-1024",
+      "test",
+      "-c",
+      "-target=wasm",
+      "-stack-size=64kb",
+      "-opt=z",
+      "-bench=BenchmarkBytes/128/Update$",
+      "-run=^$",
+      "-benchmem",
+      "-benchtime=1s",
+      "-o",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-1024.wasm",
+      "./tests/aggregatebench"
+    ]
+  },
+  {
+    "phase": "run",
+    "variant": "markers",
+    "repeat": 1,
+    "command": [
+      "node",
+      "/Users/evan/projects/tinygo/targets/wasm_exec_node.js",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-markers.wasm"
+    ],
+    "log": "control128-markers-run1.log"
+  },
+  {
+    "phase": "run",
+    "variant": "1024",
+    "repeat": 1,
+    "command": [
+      "node",
+      "/Users/evan/projects/tinygo/targets/wasm_exec_node.js",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-1024.wasm"
+    ],
+    "log": "control128-1024-run1.log"
+  },
+  {
+    "phase": "run",
+    "variant": "1024",
+    "repeat": 2,
+    "command": [
+      "node",
+      "/Users/evan/projects/tinygo/targets/wasm_exec_node.js",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-1024.wasm"
+    ],
+    "log": "control128-1024-run2.log"
+  },
+  {
+    "phase": "run",
+    "variant": "markers",
+    "repeat": 2,
+    "command": [
+      "node",
+      "/Users/evan/projects/tinygo/targets/wasm_exec_node.js",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-markers.wasm"
+    ],
+    "log": "control128-markers-run2.log"
+  },
+  {
+    "phase": "run",
+    "variant": "markers",
+    "repeat": 3,
+    "command": [
+      "node",
+      "/Users/evan/projects/tinygo/targets/wasm_exec_node.js",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-markers.wasm"
+    ],
+    "log": "control128-markers-run3.log"
+  },
+  {
+    "phase": "run",
+    "variant": "1024",
+    "repeat": 3,
+    "command": [
+      "node",
+      "/Users/evan/projects/tinygo/targets/wasm_exec_node.js",
+      "/private/tmp/tinygo-aggregate-sweep-artifacts/control128-1024.wasm"
+    ],
+    "log": "control128-1024-run3.log"
+  }
+]

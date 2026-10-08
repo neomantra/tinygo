@@ -1,0 +1,2 @@
+target,opt,benchmark,variants,caveat
+wasm,z,BenchmarkBytes/128/Update,markers;1024,Identical code sections showed different short-suite medians; focused 1s runs matched. See REPORT.md and control128.json.

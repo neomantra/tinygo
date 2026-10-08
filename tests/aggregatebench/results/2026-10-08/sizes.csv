@@ -1,0 +1,49 @@
+target,opt,variant,binary_bytes,code_bytes,code_metric
+host,2,dev,1622656,1154624,Mach-O __text section
+host,z,dev,1594688,904588,Mach-O __text section
+wasm,2,dev,3328004,1408435,wasm code section payload
+wasm,z,dev,2400779,1166535,wasm code section payload
+wasip1,2,dev,3433517,1424395,wasm code section payload
+wasip1,z,dev,2511530,1189280,wasm code section payload
+host,2,markers,1622992,1154120,Mach-O __text section
+host,z,markers,1548192,858104,Mach-O __text section
+wasm,2,markers,3328084,1408670,wasm code section payload
+wasm,z,markers,2399923,1166530,wasm code section payload
+wasip1,2,markers,3434344,1424816,wasm code section payload
+wasip1,z,markers,2510924,1189494,wasm code section payload
+host,2,16,813952,347484,Mach-O __text section
+host,z,16,743440,211320,Mach-O __text section
+wasm,2,16,2634159,759655,wasm code section payload
+wasm,z,16,1726113,536775,wasm code section payload
+wasip1,2,16,2742137,776219,wasm code section payload
+wasip1,z,16,1837103,559739,wasm code section payload
+host,2,32,813616,353968,Mach-O __text section
+host,z,32,744096,217800,Mach-O __text section
+wasm,2,32,2639989,765145,wasm code section payload
+wasm,z,32,1731294,541660,wasm code section payload
+wasip1,2,32,2747952,781695,wasm code section payload
+wasip1,z,32,1842284,564624,wasm code section payload
+host,2,64,846992,372996,Mach-O __text section
+host,z,64,761840,236756,Mach-O __text section
+wasm,2,64,2670861,780244,wasm code section payload
+wasm,z,64,1761708,556545,wasm code section payload
+wasip1,2,64,2778811,796782,wasm code section payload
+wasip1,z,64,1872692,579509,wasm code section payload
+host,2,128,912624,443016,Mach-O __text section
+host,z,128,833200,300788,Mach-O __text section
+wasm,2,128,2732736,838176,wasm code section payload
+wasm,z,128,1822833,613711,wasm code section payload
+wasip1,2,128,2839053,854385,wasm code section payload
+wasip1,z,128,1933834,636675,wasm code section payload
+host,2,256,1011712,539752,Mach-O __text section
+host,z,256,921312,389008,Mach-O __text section
+wasm,2,256,2800228,899236,wasm code section payload
+wasm,z,256,1884647,669235,wasm code section payload
+wasip1,2,256,2906526,915424,wasm code section payload
+wasip1,z,256,1995648,692199,wasm code section payload
+host,2,1024,1622992,1154120,Mach-O __text section
+host,z,1024,1548544,858104,Mach-O __text section
+wasm,2,1024,3328084,1408670,wasm code section payload
+wasm,z,1024,2399923,1166530,wasm code section payload
+wasip1,2,1024,3434344,1424816,wasm code section payload
+wasip1,z,1024,2510924,1189494,wasm code section payload

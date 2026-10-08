@@ -1,0 +1,16 @@
+diff --git a/compiler/func.go b/compiler/func.go
+index 0ee85190..9bedb095 100644
+--- a/compiler/func.go
++++ b/compiler/func.go
+@@ -20,10 +20,7 @@ const (
+ )
+ 
+ func (c *compilerContext) maxDirectAggregateValues() uint64 {
+-	if c.GOARCH == "wasm" {
+-		return maxDirectAggregateValuesWasm
+-	}
+-	return maxDirectAggregateValuesDefault
++	return 256
+ }
+ 
+ // The WebAssembly JavaScript API limits function types to 1000 parameters.

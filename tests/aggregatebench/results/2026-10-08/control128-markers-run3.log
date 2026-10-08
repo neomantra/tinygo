@@ -1,0 +1,9 @@
+BenchmarkBytes/128/Update 	16331917	        73.49 ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes/128/Update
+    checksum 71
+    checksum 25044
+    checksum 2.551248e+06
+    checksum 2.55024448e+08
+    checksum 2.600300328e+09
+    checksum 4.164640313e+09
+PASS
