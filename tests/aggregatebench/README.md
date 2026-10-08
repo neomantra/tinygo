@@ -55,7 +55,7 @@ array size at a time using exactly one of `aggregatebench_16`, `aggregatebench_3
 workloads. Without these tags, all workloads are included.
 
 ```sh
-"$TINYGO" test -target=cortex-m-qemu -tags=aggregatebench_65 -opt=2 -bench=. -benchmem ./tests/aggregatebench
+"$TINYGO" test -target=cortex-m-qemu -tags=aggregatebench_65 -opt=2 -bench='.*' -benchmem ./tests/aggregatebench
 ```
 
 Use the same selection tag on all compared builds. Run every selection to cover
@@ -142,3 +142,28 @@ Wasm observations recognize constant decrements of `__stack_pointer`. Native
 ARM64 observations sum immediate entry stack reservations before the first branch
 or call; these are not complete stack bounds. A zero observation does not prove
 zero stack usage. The native frame inspector supports ARM64 Mach-O only.
+
+## Embedded architecture sweep
+
+`architecture_sweep.py` reuses compilers whose hashes match a prior sweep manifest.
+It runs all eight variants at opt 2 and z on Cortex-M3 and RV32 QEMU targets.
+Cortex-M uses ten selections with flat benchmark entry points to fit 64 KiB RAM.
+The benchmark loops are shared with the nested host suite. Initialization is
+outside each measured loop. RISC-V runs the complete suite in one binary.
+
+```sh
+python3 tests/aggregatebench/architecture_sweep.py \
+  --compiler-manifest tests/aggregatebench/results/2026-10-08/manifest.json \
+  --compilers tests/aggregatebench/artifacts \
+  --output tests/aggregatebench/results/my-architecture-run \
+  --artifacts tests/aggregatebench/artifacts/my-architecture-run
+```
+
+Use LLVM/LLD 22 on PATH and install `qemu-system-arm` and `qemu-system-riscv32`.
+Tests and 100-iteration benchmarks run together with baked-in arguments.
+Bare-metal matching requires `-bench='.*'`, not `-bench=.`. Cortex-M uses a
+16 KiB stack and RISC-V uses 64 KiB, both retaining the 1024-byte stack-promotion
+limit. Cortex-M's clock can report no elapsed time, so missing timings are kept
+empty. QEMU timings are not hardware performance measurements. Allocation results
+are retained only when correctness passes and every selected benchmark completes
+100 iterations. Build failures, timeouts, and incomplete runs remain in the manifest.
