@@ -28,7 +28,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--artifacts', type=Path, required=True)
     parser.add_argument('--jobs', type=int, default=2)
-    parser.add_argument('--targets', nargs='+', choices=['cortex-m-qemu', 'riscv-qemu'],
+    parser.add_argument('--targets', nargs='+', choices=['cortex-m-qemu', 'riscv-qemu', 'darwin-amd64'],
                         default=['cortex-m-qemu', 'riscv-qemu'])
     args = parser.parse_args()
     for name in ['root', 'compiler_manifest', 'compilers', 'output', 'artifacts']:
@@ -70,7 +70,8 @@ def main():
         'workload_sha256': {p.name: digest(p) for p in sorted((args.root / 'tests/aggregatebench').glob('*.go'))},
         'script_sha256': digest(__file__),
         'benchtime': '100x', 'purpose': 'emulated correctness and allocation coverage, not hardware timing',
-        'stack_sizes': {'cortex-m-qemu': '16kb', 'riscv-qemu': '64kb'},
+        'stack_sizes': {'cortex-m-qemu': '16kb', 'riscv-qemu': '64kb', 'darwin-amd64': '64kb'},
+        'compile_only_targets': ['darwin-amd64'],
         'versions': {name: capture(command) for name, command in {
             'qemu_arm': ['qemu-system-arm', '--version'],
             'qemu_riscv': ['qemu-system-riscv32', '--version'],
@@ -85,10 +86,13 @@ def main():
     def build(spec):
         target, variant, opt, selection = spec
         key = f'{target}-opt{opt}-{variant}-{selection}'
-        binary = args.artifacts / (key + '.elf')
+        binary = args.artifacts / (key + ('.bin' if target == 'darwin-amd64' else '.elf'))
         command = [compilers[variant]['path'], 'test', '-c', f'-target={target}', f'-opt={opt}',
                    f'-stack-size={metadata["stack_sizes"][target]}', '-bench=.*', '-benchmem',
                    '-benchtime=100x', '-v', '-o', str(binary)]
+        if target == 'darwin-amd64':
+            command.remove(f'-target={target}')
+            command = ['env', 'GOOS=darwin', 'GOARCH=amd64'] + command
         if selection != 'all':
             command.append(f'-tags=aggregatebench_{selection},aggregatebench_flat')
         command.append('./tests/aggregatebench')
@@ -112,6 +116,11 @@ def main():
     rows = []
     for build in sorted(metadata['builds'], key=lambda b: b['key']):
         if build['status']:
+            continue
+        if build['target'] in metadata['compile_only_targets']:
+            metadata['runs'].append({'key': build['key'], 'skipped': True,
+                                     'reason': 'cross-compilation only; no x86-64 execution runner'})
+            save()
             continue
         if build['target'] == 'cortex-m-qemu':
             command = ['qemu-system-arm', '-machine', 'lm3s6965evb', '-semihosting',
@@ -151,7 +160,7 @@ def main():
             writer.writerows(rows)
     metadata['finished'] = time.strftime('%Y-%m-%dT%H:%M:%S%z')
     save()
-    failures = sum(b['status'] != 0 for b in metadata['builds']) + sum(not r['passed'] for r in metadata['runs'])
+    failures = sum(b['status'] != 0 for b in metadata['builds']) + sum(not r.get('passed', r.get('skipped', False)) for r in metadata['runs'])
     print(f'finished: {len(rows)} measurements, {failures} failed configurations', flush=True)
     return bool(failures)
 

@@ -1,0 +1,2 @@
+program too large for this chip (flash overflowed by 190360 bytes)
+	optimization guide: https://tinygo.org/docs/guides/optimizing-binaries/

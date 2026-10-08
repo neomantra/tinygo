@@ -1,0 +1,38 @@
+key,phase,reason,log
+cortex-m-qemu-opt2-dev-256,build,program too large for this chip (flash overflowed by 17856 bytes),cortex-m-qemu-opt2-dev-256-build.log
+cortex-m-qemu-opt2-dev-512,build,program too large for this chip (flash overflowed by 145440 bytes),cortex-m-qemu-opt2-dev-512-build.log
+cortex-m-qemu-opt2-dev-1024,build,program too large for this chip (flash overflowed by 309376 bytes),cortex-m-qemu-opt2-dev-1024-build.log
+cortex-m-qemu-optz-dev-512,build,program too large for this chip (flash overflowed by 86472 bytes),cortex-m-qemu-optz-dev-512-build.log
+cortex-m-qemu-optz-dev-1024,build,program too large for this chip (flash overflowed by 204408 bytes),cortex-m-qemu-optz-dev-1024-build.log
+cortex-m-qemu-opt2-markers-256,build,program too large for this chip (flash overflowed by 17920 bytes),cortex-m-qemu-opt2-markers-256-build.log
+cortex-m-qemu-opt2-markers-512,build,program too large for this chip (flash overflowed by 145440 bytes),cortex-m-qemu-opt2-markers-512-build.log
+cortex-m-qemu-opt2-markers-1024,build,program too large for this chip (flash overflowed by 313232 bytes),cortex-m-qemu-opt2-markers-1024-build.log
+cortex-m-qemu-optz-markers-512,build,program too large for this chip (flash overflowed by 86200 bytes),cortex-m-qemu-optz-markers-512-build.log
+cortex-m-qemu-optz-markers-1024,build,program too large for this chip (flash overflowed by 190360 bytes),cortex-m-qemu-optz-markers-1024-build.log
+cortex-m-qemu-opt2-256-256,build,program too large for this chip (flash overflowed by 17920 bytes),cortex-m-qemu-opt2-256-256-build.log
+cortex-m-qemu-opt2-1024-256,build,program too large for this chip (flash overflowed by 17920 bytes),cortex-m-qemu-opt2-1024-256-build.log
+cortex-m-qemu-opt2-1024-512,build,program too large for this chip (flash overflowed by 145440 bytes),cortex-m-qemu-opt2-1024-512-build.log
+cortex-m-qemu-opt2-1024-1024,build,program too large for this chip (flash overflowed by 313232 bytes),cortex-m-qemu-opt2-1024-1024-build.log
+cortex-m-qemu-optz-1024-512,build,program too large for this chip (flash overflowed by 86200 bytes),cortex-m-qemu-optz-1024-512-build.log
+cortex-m-qemu-optz-1024-1024,build,program too large for this chip (flash overflowed by 190360 bytes),cortex-m-qemu-optz-1024-1024-build.log
+cortex-m-qemu-opt2-1024-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-1024-1025-run.log
+cortex-m-qemu-opt2-128-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-128-1025-run.log
+cortex-m-qemu-opt2-16-1024,run,fatal error: out of memory,cortex-m-qemu-opt2-16-1024-run.log
+cortex-m-qemu-opt2-16-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-16-1025-run.log
+cortex-m-qemu-opt2-256-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-256-1025-run.log
+cortex-m-qemu-opt2-32-1024,run,fatal error: out of memory,cortex-m-qemu-opt2-32-1024-run.log
+cortex-m-qemu-opt2-32-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-32-1025-run.log
+cortex-m-qemu-opt2-64-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-64-1025-run.log
+cortex-m-qemu-opt2-dev-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-dev-1025-run.log
+cortex-m-qemu-opt2-markers-1025,run,fatal error: out of memory,cortex-m-qemu-opt2-markers-1025-run.log
+cortex-m-qemu-optz-1024-1025,run,fatal error: out of memory,cortex-m-qemu-optz-1024-1025-run.log
+cortex-m-qemu-optz-128-1024,run,fatal error: out of memory,cortex-m-qemu-optz-128-1024-run.log
+cortex-m-qemu-optz-128-1025,run,fatal error: out of memory,cortex-m-qemu-optz-128-1025-run.log
+cortex-m-qemu-optz-16-1025,run,fatal error: out of memory,cortex-m-qemu-optz-16-1025-run.log
+cortex-m-qemu-optz-256-1024,run,fatal error: out of memory,cortex-m-qemu-optz-256-1024-run.log
+cortex-m-qemu-optz-256-1025,run,fatal error: out of memory,cortex-m-qemu-optz-256-1025-run.log
+cortex-m-qemu-optz-32-1025,run,fatal error: out of memory,cortex-m-qemu-optz-32-1025-run.log
+cortex-m-qemu-optz-64-1024,run,fatal error: out of memory,cortex-m-qemu-optz-64-1024-run.log
+cortex-m-qemu-optz-64-1025,run,fatal error: out of memory,cortex-m-qemu-optz-64-1025-run.log
+cortex-m-qemu-optz-dev-1025,run,fatal error: out of memory,cortex-m-qemu-optz-dev-1025-run.log
+cortex-m-qemu-optz-markers-1025,run,fatal error: out of memory,cortex-m-qemu-optz-markers-1025-run.log

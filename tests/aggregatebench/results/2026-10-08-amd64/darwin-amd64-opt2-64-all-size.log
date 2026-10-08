@@ -1,0 +1,21 @@
+/Users/evan/projects/tinygo/tests/aggregatebench/artifacts/2026-10-08-amd64/darwin-amd64-opt2-64-all.bin  :
+section               size         addr
+__text              460989   4294969264
+__stubs                264   4295430256
+__stub_helper          456   4295430520
+__cstring             3098   4295430976
+__literals            1104   4295434080
+__const              41198   4295435184
+__unwind_info         4656   4295476384
+__eh_frame             952   4295481040
+__got                   40   4295483392
+__la_symbol_ptr        352   4295483432
+__const              40352   4295483792
+__data               85216   4295524144
+__thread_vars           24   4295609360
+__thread_bss             8   4295609384
+__common            118820   4295609392
+__bss                 2504   4295728224
+Total               760033
+
+

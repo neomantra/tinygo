@@ -1,0 +1,21 @@
+/Users/evan/projects/tinygo/tests/aggregatebench/artifacts/2026-10-08-amd64/darwin-amd64-optz-markers-all.bin  :
+section                size         addr
+__text              1372574   4294969264
+__stubs                 222   4296341840
+__stub_helper           386   4296342064
+__cstring              3098   4296342450
+__literals              296   4296345552
+__const               40226   4296345856
+__unwind_info          8764   4296386084
+__eh_frame            30592   4296394848
+__got                   104   4296425472
+__la_symbol_ptr         296   4296425576
+__const               40368   4296425872
+__data                86616   4296466240
+__thread_vars            24   4296552856
+__thread_bss              8   4296552880
+__common             118820   4296552888
+__bss                  2504   4296671712
+Total               1704898
+
+

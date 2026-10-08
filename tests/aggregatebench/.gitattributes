@@ -1,2 +1,3 @@
 results/**/*.csv whitespace=cr-at-eol
 results/**/*.patch -whitespace
+results/**/*.log whitespace=cr-at-eol,-blank-at-eof

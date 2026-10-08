@@ -5,6 +5,9 @@ Keep generated compilers and executables in the ignored `artifacts/` directory
 and compiler checkouts in the ignored `worktrees/` directory beside this file.
 Commit workload sources, sweep scripts, manifests, logs, and reports.
 
+The [architecture extension report](results/2026-10-08-architectures/REPORT.md)
+adds Cortex-M and RISC-V execution plus x86-64 code inspection.
+
 The [2026-10-08 sweep report](results/2026-10-08/REPORT.md) includes runtime,
 allocation, code-size, and stack observations for native ARM64 and wasm.
 
@@ -167,3 +170,41 @@ limit. Cortex-M's clock can report no elapsed time, so missing timings are kept
 empty. QEMU timings are not hardware performance measurements. Allocation results
 are retained only when correctness passes and every selected benchmark completes
 100 iterations. Build failures, timeouts, and incomplete runs remain in the manifest.
+
+Pass `--targets darwin-amd64` to the architecture runner for an x86-64 build-only
+sweep. It records execution as skipped. Use a separate output directory.
+
+Inspect code sections and partial entry stack reservations with:
+
+```sh
+python3 tests/aggregatebench/inspect_architectures.py \
+  --results tests/aggregatebench/results/my-architecture-run \
+  --llvm-bin /opt/homebrew/opt/llvm@22/bin
+```
+
+These stack observations stop at the first branch or call and recognize immediate
+adjustments and pushes. They do not include complete call chains, x86 return
+addresses, red-zone use, or every outlined/register-sized adjustment. Inspect
+`evidence` and `unresolved_adjustment` before interpreting a row. Zero does not
+establish zero stack use.
+
+## Stable local layout
+
+- `worktrees/dev` pins upstream dev at `f6d269f7`.
+- `worktrees/combined` uses local branch `nm-aggregate-sweep-compiler` at `115ef5e1`.
+- `artifacts/tinygo-*` contains the eight hash-verified compiler binaries.
+- `artifacts/2026-10-08` contains the original ARM64 and Wasm executables.
+- `artifacts/2026-10-08-architectures` contains Cortex-M and RISC-V executables.
+- `artifacts/2026-10-08-amd64` contains x86-64 executables.
+
+The artifact and worktree directories are ignored by Git. Source commits and
+results remain committed; binaries can be regenerated. Historical manifests retain
+the paths actually used when those measurements were taken. To inspect relocated
+original executables, pass `--artifacts tests/aggregatebench/artifacts/2026-10-08`
+to `inspect_artifacts.py`.
+
+For a new full host/Wasm sweep, use `--dev-source tests/aggregatebench/worktrees/dev`
+and `--sweep-source tests/aggregatebench/worktrees/combined` with `sweep.py`.
+Choose fresh output and artifact directories. This branch contains lifetime markers;
+it remains the marker-enabled workload source. Do not run two compiler rebuild
+sweeps against the same combined checkout at once.

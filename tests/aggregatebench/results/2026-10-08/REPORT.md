@@ -1,5 +1,8 @@
 # Aggregate threshold sweep results
 
+The [architecture extension](../2026-10-08-architectures/REPORT.md) adds
+Cortex-M and RV32 execution plus x86-64 code inspection.
+
 Lower aggregate thresholds reduce code size and substantially speed up some
 large-value workloads, but introduce heap allocations and slow down repeated
 value updates. This happens on native ARM64 as well as wasm. The sweep does not
@@ -158,5 +161,6 @@ data is used here. Its logs remain in /private/tmp/tinygo-aggregate-sweep-invali
 - [Sweep and inspection instructions](../../README.md)
 
 Raw build, correctness, and benchmark logs and the six compiler patches are in
-this directory. Compilers and test executables remain in
-/private/tmp/tinygo-aggregate-sweep-artifacts.
+this directory. Copies of the compilers and test executables are preserved under
+`tests/aggregatebench/artifacts/`. See the stable layout in the workload README.
+Historical manifests retain their original temporary paths.

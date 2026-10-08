@@ -1,0 +1,17 @@
+target,opt,variant,selection,binary_bytes,code_bytes,code_metric
+darwin-amd64,z,dev,all,1860856,1372716,__text
+darwin-amd64,2,dev,all,2075864,1644349,__text
+darwin-amd64,z,markers,all,1857464,1372574,__text
+darwin-amd64,2,markers,all,2075536,1643181,__text
+darwin-amd64,z,16,all,735208,249294,__text
+darwin-amd64,2,16,all,838920,405453,__text
+darwin-amd64,z,32,all,751248,264970,__text
+darwin-amd64,2,32,all,847112,416621,__text
+darwin-amd64,z,64,all,792208,304057,__text
+darwin-amd64,2,64,all,892168,460989,__text
+darwin-amd64,z,128,all,919112,434495,__text
+darwin-amd64,2,128,all,1039552,609437,__text
+darwin-amd64,z,256,all,1074768,590303,__text
+darwin-amd64,2,256,all,1211264,780269,__text
+darwin-amd64,z,1024,all,1857464,1372574,__text
+darwin-amd64,2,1024,all,2075536,1643181,__text

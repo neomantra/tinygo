@@ -1,0 +1,24 @@
+/Users/evan/projects/tinygo/tests/aggregatebench/artifacts/2026-10-08-architectures/riscv-qemu-optz-128-all.elf  :
+section                 size         addr
+.text                 334608   2147483648
+.stack0                 2048   2147818256
+.stack1                 2048   2147820304
+.stack2                 2048   2147822352
+.stack3                 2048   2147824400
+.data                   2412   2147826448
+.bss                    8976   2147831808
+.riscv.attributes         93            0
+.debug_info           235345            0
+.debug_abbrev           9215            0
+.debug_aranges           152            0
+.debug_line           108226            0
+.debug_ranges          13096            0
+.debug_loc            216932            0
+.debug_str            146010            0
+.comment                  94            0
+.debug_frame           25160            0
+.debug_pubnames       187957            0
+.debug_pubtypes        10311            0
+Total                1306779
+
+

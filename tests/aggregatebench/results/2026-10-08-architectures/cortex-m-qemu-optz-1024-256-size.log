@@ -1,0 +1,23 @@
+/Users/evan/projects/tinygo/tests/aggregatebench/artifacts/2026-10-08-architectures/cortex-m-qemu-optz-1024-256.elf  :
+section                  size        addr
+.text                  195928           0
+.tinygo_stacksizes         20      195928
+.stack                   4096   536870912
+.stack1                     0   536875008
+.data                    2936   536875008
+.bss                      592   536877944
+.ARM.attributes            37           0
+.debug_frame            17208           0
+.debug_info            216386           0
+.debug_abbrev            8864           0
+.debug_aranges            384           0
+.debug_line             94840           0
+.debug_ranges           12888           0
+.debug_loc             140162           0
+.debug_str             133840           0
+.comment                   94           0
+.debug_pubnames        178993           0
+.debug_pubtypes          9137           0
+Total                 1016405
+
+

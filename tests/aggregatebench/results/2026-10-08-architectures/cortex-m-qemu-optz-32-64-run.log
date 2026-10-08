@@ -1,0 +1,175 @@
+=== RUN   TestBytes
+=== RUN   TestBytes/64
+--- PASS: TestBytes (0.00s)
+    --- PASS: TestBytes/64 (0.00s)
+=== RUN   TestShapes
+    array-only build
+--- SKIP: TestShapes (0.00s)
+=== RUN   TestSequentialBlocks
+    array-only build
+--- SKIP: TestSequentialBlocks (0.00s)
+BenchmarkWords64         	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkWords64
+    array-only build
+    array-only build
+BenchmarkScene           	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkScene
+    array-only build
+    array-only build
+BenchmarkRecord          	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkRecord
+    array-only build
+    array-only build
+BenchmarkRecordInterface 	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkRecordInterface
+    array-only build
+    array-only build
+BenchmarkSequentialBlocks	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkSequentialBlocks
+    array-only build
+    array-only build
+BenchmarkBytes16Update   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes16Update
+    unselected array size
+    unselected array size
+BenchmarkBytes16Read     	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes16Read
+    unselected array size
+    unselected array size
+BenchmarkBytes16Serial   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes16Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes16Live     	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes16Live
+    unselected array size
+    unselected array size
+BenchmarkBytes32Update   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes32Update
+    unselected array size
+    unselected array size
+BenchmarkBytes32Read     	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes32Read
+    unselected array size
+    unselected array size
+BenchmarkBytes32Serial   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes32Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes32Live     	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes32Live
+    unselected array size
+    unselected array size
+BenchmarkBytes64Update   	     100	      64 B/op	       1 allocs/op
+--- BENCH: BenchmarkBytes64Update
+    checksum 39
+    checksum 24164
+BenchmarkBytes64Read     	     100	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes64Read
+    checksum 38
+    checksum 23108
+BenchmarkBytes64Serial   	     100	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes64Serial
+    checksum 364
+    checksum 96440
+BenchmarkBytes64Live     	     100	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes64Live
+    checksum 364
+    checksum 96440
+BenchmarkBytes65Update   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes65Update
+    unselected array size
+    unselected array size
+BenchmarkBytes65Read     	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes65Read
+    unselected array size
+    unselected array size
+BenchmarkBytes65Serial   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes65Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes65Live     	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes65Live
+    unselected array size
+    unselected array size
+BenchmarkBytes128Update  	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes128Update
+    unselected array size
+    unselected array size
+BenchmarkBytes128Read    	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes128Read
+    unselected array size
+    unselected array size
+BenchmarkBytes128Serial  	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes128Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes128Live    	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes128Live
+    unselected array size
+    unselected array size
+BenchmarkBytes256Update  	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes256Update
+    unselected array size
+    unselected array size
+BenchmarkBytes256Read    	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes256Read
+    unselected array size
+    unselected array size
+BenchmarkBytes256Serial  	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes256Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes256Live    	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes256Live
+    unselected array size
+    unselected array size
+BenchmarkBytes512Update  	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes512Update
+    unselected array size
+    unselected array size
+BenchmarkBytes512Read    	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes512Read
+    unselected array size
+    unselected array size
+BenchmarkBytes512Serial  	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes512Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes512Live    	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes512Live
+    unselected array size
+    unselected array size
+BenchmarkBytes1024Update 	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1024Update
+    unselected array size
+    unselected array size
+BenchmarkBytes1024Read   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1024Read
+    unselected array size
+    unselected array size
+BenchmarkBytes1024Serial 	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1024Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes1024Live   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1024Live
+    unselected array size
+    unselected array size
+BenchmarkBytes1025Update 	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1025Update
+    unselected array size
+    unselected array size
+BenchmarkBytes1025Read   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1025Read
+    unselected array size
+    unselected array size
+BenchmarkBytes1025Serial 	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1025Serial
+    unselected array size
+    unselected array size
+BenchmarkBytes1025Live   	       0	               NaN ns/op	       0 B/op	       0 allocs/op
+--- BENCH: BenchmarkBytes1025Live
+    unselected array size
+    unselected array size
+PASS

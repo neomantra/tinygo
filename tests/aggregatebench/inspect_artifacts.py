@@ -77,6 +77,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--llvm-bin", type=Path, required=True)
+    parser.add_argument("--artifacts", type=Path)
     args = parser.parse_args()
     manifest = json.loads((args.results / "manifest.json").read_text())
     frames, sizes = [], []
@@ -84,6 +85,8 @@ def main():
         if build["status"]:
             continue
         binary = Path(build["binary"])
+        if args.artifacts:
+            binary = args.artifacts / binary.name
         common = {k: build[k] for k in ["target", "opt", "variant"]}
         if build["target"] == "host":
             output = subprocess.check_output([str(args.llvm_bin / "llvm-size"), "-m", str(binary)], text=True)

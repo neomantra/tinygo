@@ -1,0 +1,3 @@
+=== RUN   TestBytes
+=== RUN   TestBytes/1025
+fatal error: out of memory
